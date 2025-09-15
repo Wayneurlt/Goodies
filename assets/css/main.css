@@ -10,6 +10,93 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Dark mode styles */
+.dark {
+  background-color: #111827 !important;
+  color: #f9fafb !important;
+}
+
+.dark body {
+  background-color: #111827 !important;
+  color: #f9fafb !important;
+}
+
+/* Dark mode for all elements */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #f9fafb !important;
+}
+
+.dark p, .dark span, .dark div {
+  color: #d1d5db !important;
+}
+
+.dark input, .dark textarea, .dark select {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+.dark input::placeholder, .dark textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+.dark select option {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+.dark button {
+  color: #f9fafb !important;
+}
+
+.dark .bg-white {
+  background-color: #1f2937 !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #111827 !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #1f2937 !important;
+}
+
+.dark .text-gray-900 {
+  color: #f9fafb !important;
+}
+
+.dark .text-gray-800 {
+  color: #f9fafb !important;
+}
+
+.dark .text-gray-700 {
+  color: #d1d5db !important;
+}
+
+.dark .text-gray-600 {
+  color: #d1d5db !important;
+}
+
+.dark .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+.dark .border-gray-200 {
+  border-color: #374151 !important;
+}
+
+.dark .border-gray-300 {
+  border-color: #4b5563 !important;
+}
+
+.dark .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+}
+
 .dark body {
   background-color: #111827;
   color: #f9fafb;
@@ -164,4 +251,31 @@ body {
 
 .animate-spin-slow {
   animation: spin-slow 10s linear infinite;
+}
+
+/* Mobile responsive utilities */
+@media (max-width: 768px) {
+  .text-balance {
+    text-align: center;
+  }
+  
+  .btn-primary, .btn-secondary, .btn-danger {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .card {
+    margin: 0.5rem;
+  }
+  
+  .input-field {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Tablet responsive */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .card {
+    margin: 0.75rem;
+  }
 }

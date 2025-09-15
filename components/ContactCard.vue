@@ -1,5 +1,5 @@
 <template>
-  <div style="background: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; transition: all 0.2s;"
+  <div class="contact-card" style="background: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; transition: all 0.2s;"
        onmouseover="this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)'"
        onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)'">
     
@@ -9,7 +9,7 @@
         <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin: 0 0 0.25rem 0;">
           {{ contact.name }}
         </h3>
-        <div v-if="contact.location" style="display: inline-flex; align-items: center; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; background-color: #dcfce7; color: #166534;">
+        <div v-if="contact.location" class="location-tag" style="display: inline-flex; align-items: center; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; background-color: #dcfce7; color: #166534;">
           <Icon name="heroicons:map-pin" style="width: 0.75rem; height: 0.75rem; margin-right: 0.25rem;" />
           {{ contact.location.name }}
         </div>
@@ -29,6 +29,7 @@
         <!-- Dropdown Menu -->
         <div
           v-if="showActions"
+          class="dropdown-menu"
           style="position: absolute; right: 0; top: 2rem; background: white; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; padding: 0.25rem; z-index: 10; min-width: 120px;"
         >
           <button
@@ -87,6 +88,7 @@
         <span
           v-for="tag in contact.tags.slice(0, 3)"
           :key="tag"
+          class="tag"
           style="display: inline-flex; align-items: center; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; background-color: #dbeafe; color: #1e40af;"
         >
           {{ tag }}

@@ -3,7 +3,7 @@
     <!-- Navbar -->
     <nav style="position: sticky; top: 0; z-index: 50; background-color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-bottom: 1px solid #e5e7eb;">
       <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; height: 4rem;">
+        <div class="navbar-content" style="display: flex; justify-content: space-between; align-items: center; height: 4rem;">
           <!-- Logo -->
           <div style="display: flex; align-items: center; gap: 0.75rem;">
             <div style="width: 2.5rem; height: 2.5rem; background-color: #2563eb; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
@@ -16,7 +16,7 @@
           </div>
           
           <!-- Right side actions -->
-          <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="navbar-actions" style="display: flex; align-items: center; gap: 1rem;">
             <!-- Dark mode toggle -->
             <button
               @click="toggleDarkMode"
@@ -56,12 +56,22 @@
                 <!-- Dropdown Menu -->
                 <div
                   v-if="showAdminMenu"
+                  class="dropdown-menu"
                   style="position: absolute; right: 0; top: 2.5rem; background: white; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; padding: 0.25rem; z-index: 10; min-width: 200px;"
                 >
                   <div style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">
                     <p style="font-size: 0.875rem; font-weight: 500; color: #111827; margin: 0;">{{ adminInfo?.name }}</p>
                     <p style="font-size: 0.75rem; color: #6b7280; margin: 0;">{{ adminInfo?.email }}</p>
                   </div>
+                  <button
+                    @click="goToDashboard"
+                    style="width: 100%; padding: 0.75rem; text-align: left; font-size: 0.875rem; color: #374151; background: transparent; border: none; cursor: pointer; transition: background-color 0.2s; display: flex; align-items: center; gap: 0.5rem;"
+                    onmouseover="this.style.backgroundColor='#f3f4f6'"
+                    onmouseout="this.style.backgroundColor='transparent'"
+                  >
+                    <Icon name="heroicons:chart-bar" style="width: 1rem; height: 1rem;" />
+                    Dashboard
+                  </button>
                   <button
                     @click="logout"
                     style="width: 100%; padding: 0.75rem; text-align: left; font-size: 0.875rem; color: #dc2626; background: transparent; border: none; cursor: pointer; transition: background-color 0.2s; display: flex; align-items: center; gap: 0.5rem;"
@@ -94,28 +104,26 @@
     <!-- Main Content -->
     <main style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
       <!-- Hero Search Section -->
-      <div style="text-align: center; margin-bottom: 3rem;">
-        <div style="margin-bottom: 2rem;">
-          <h1 style="font-size: 3rem; font-weight: bold; color: #111827; margin: 0 0 1rem 0; line-height: 1.1;">
+      <div class="hero-section" style="text-align: center; margin-bottom: 3rem;">
+        <div class="hero-content" style="margin-bottom: 2rem;">
+          <h1 class="hero-title" style="font-size: 3rem; font-weight: bold; color: #111827; margin: 0 0 1rem 0; line-height: 1.1;">
             Find Your Contacts
           </h1>
-          <p style="font-size: 1.125rem; color: #6b7280; margin: 0 0 2rem 0; max-width: 32rem; margin-left: auto; margin-right: auto;">
+          <p class="hero-subtitle" style="font-size: 1.125rem; color: #6b7280; margin: 0 0 2rem 0; max-width: 32rem; margin-left: auto; margin-right: auto;">
             Search through your contacts by name, location, tags, or any other information
           </p>
         </div>
         
         <!-- Big Search Bar -->
-        <div style="max-width: 32rem; margin: 0 auto 1.5rem auto;">
-          <div style="position: relative;">
-            <Icon name="heroicons:magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); width: 1.5rem; height: 1.5rem; color: #9ca3af;" />
+        <div class="search-container">
+          <div class="search-input-wrapper">
+            <Icon name="heroicons:magnifying-glass" class="search-icon" />
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Search contacts by name, location, tags, or any information..."
-              style="width: 100%; padding: 1rem 1rem 1rem 3rem; font-size: 1.125rem; border: 1px solid #d1d5db; border-radius: 0.75rem; background: white; color: #111827; outline: none; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"
+              placeholder="Search contacts..."
+              class="search-input"
               @input="debouncedSearch"
-              onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)'"
-              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)'"
             />
           </div>
         </div>
@@ -124,6 +132,7 @@
         <div style="display: flex; justify-content: center;">
           <button
             @click="showFilters = !showFilters"
+            class="filter-button"
             style="background-color: #f3f4f6; color: #374151; padding: 0.75rem 1.5rem; border-radius: 0.75rem; border: none; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;"
             onmouseover="this.style.backgroundColor='#e5e7eb'"
             onmouseout="this.style.backgroundColor='#f3f4f6'"
@@ -139,8 +148,8 @@
       </div>
 
       <!-- Filters Panel -->
-      <div v-if="showFilters" style="background: white; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+      <div v-if="showFilters" class="filter-panel" style="background: white; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb;">
+        <div class="filters-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
           <!-- Location Filter -->
           <div>
             <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">Location</label>
@@ -195,7 +204,7 @@
       </div>
 
       <!-- Contacts Grid -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+      <div class="contacts-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
         <ContactCard
           v-for="contact in sortedContacts"
           :key="contact.id"
@@ -258,6 +267,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 
+const router = useRouter()
+
 // Reactive state
 const contacts = ref([])
 const locations = ref([])
@@ -279,7 +290,7 @@ const editingContact = ref(null)
 const showAdminMenu = ref(false)
 
 // Dark mode
-const isDark = ref(false)
+const { isDark, toggleDarkMode: toggleDark, initDarkMode } = useDarkMode()
 
 // UI state
 const showFilters = ref(false)
@@ -294,10 +305,15 @@ const sortedContacts = computed(() => {
 
 // Methods
 const toggleDarkMode = () => {
-  isDark.value = !isDark.value
-  document.documentElement.classList.toggle('dark', isDark.value)
-  localStorage.setItem('darkMode', isDark.value.toString())
+  toggleDark()
 }
+
+const goToDashboard = () => {
+  console.log('Navigating to dashboard...')
+  navigateTo('/admin')
+}
+
+
 
 const checkAuth = async () => {
   try {
@@ -318,7 +334,7 @@ const logout = async () => {
     isAdmin.value = false
     adminInfo.value = null
     showAdminMenu.value = false
-    await navigateTo('/')
+    await navigateTo('/login')
   } catch (error) {
     console.error('Logout error:', error)
   }
@@ -465,12 +481,8 @@ function debounce(func, wait) {
 
 // Lifecycle
 onMounted(async () => {
-  // Load dark mode preference
-  const savedDarkMode = localStorage.getItem('darkMode')
-  if (savedDarkMode === 'true') {
-    isDark.value = true
-    document.documentElement.classList.add('dark')
-  }
+  // Initialize dark mode
+  initDarkMode()
   
   // Load initial data
   await Promise.all([
@@ -499,6 +511,10 @@ onMounted(async () => {
   border-bottom-color: #374151 !important;
 }
 
+.dark nav h1, .dark nav p {
+  color: #f9fafb !important;
+}
+
 .dark h1, .dark h3 {
   color: #f9fafb !important;
 }
@@ -523,6 +539,11 @@ onMounted(async () => {
   color: #f9fafb !important;
 }
 
+.dark select option {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
 .dark button {
   color: #f9fafb !important;
 }
@@ -530,5 +551,238 @@ onMounted(async () => {
 .dark .filter-panel {
   background-color: #1f2937 !important;
   border-color: #374151 !important;
+}
+
+.dark label {
+  color: #d1d5db !important;
+}
+
+.dark .contact-card {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+.dark .contact-card h3 {
+  color: #f9fafb !important;
+}
+
+.dark .contact-card p {
+  color: #d1d5db !important;
+}
+
+.dark .contact-card a {
+  color: #60a5fa !important;
+}
+
+.dark .contact-card a:hover {
+  color: #93c5fd !important;
+}
+
+.dark .dropdown-menu {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+.dark .dropdown-menu p {
+  color: #f9fafb !important;
+}
+
+.dark .dropdown-menu button {
+  color: #d1d5db !important;
+}
+
+.dark .dropdown-menu button:hover {
+  background-color: #374151 !important;
+}
+
+.dark .tag {
+  background-color: #1e40af !important;
+  color: #93c5fd !important;
+}
+
+.dark .location-tag {
+  background-color: #166534 !important;
+  color: #86efac !important;
+}
+
+/* Search Bar Styles - Mobile First */
+.search-container {
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto 1.5rem auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #9ca3af;
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.875rem 0.875rem 0.875rem 2.5rem;
+  font-size: 16px; /* Prevents zoom on iOS */
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  background: white;
+  color: #111827;
+  outline: none;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Desktop styles */
+@media (min-width: 769px) {
+  .search-container {
+    padding: 0;
+  }
+  
+  .search-icon {
+    left: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .search-input {
+    padding: 1rem 1rem 1rem 3rem;
+    font-size: 1.125rem;
+  }
+}
+
+/* Dark mode search bar styles */
+.dark .search-input {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #f9fafb;
+}
+
+.dark .search-input::placeholder {
+  color: #9ca3af;
+}
+
+.dark .search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  /* Navbar mobile styles */
+  .navbar-content {
+    height: 3.5rem !important;
+    padding: 0 0.5rem !important;
+  }
+  
+  .navbar-actions {
+    gap: 0.5rem !important;
+  }
+  
+  .navbar-actions button span {
+    display: none;
+  }
+  
+  .navbar-actions button {
+    padding: 0.5rem !important;
+  }
+  
+  /* Hero section mobile styles */
+  .hero-title {
+    font-size: 2rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem !important;
+    padding: 0 1rem;
+  }
+  
+  /* Search bar mobile styles - already handled by mobile-first approach above */
+  
+  /* Filters mobile styles */
+  .filters-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .filter-panel {
+    padding: 1rem !important;
+    margin: 0 1rem 2rem 1rem !important;
+  }
+  
+  /* Contacts grid mobile styles */
+  .contacts-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    padding: 0 1rem;
+  }
+  
+  /* Main content mobile styles */
+  main {
+    padding: 1rem 0 !important;
+  }
+  
+  /* Filter button mobile styles */
+  .filter-button {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  .filter-button span {
+    display: none;
+  }
+}
+
+/* Tablet responsive styles */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .contacts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+  }
+  
+  .filters-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.75rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.875rem !important;
+  }
+  
+  .search-container {
+    padding: 0 0.5rem !important;
+  }
+  
+  .search-input {
+    padding: 0.75rem 0.75rem 0.75rem 2.25rem !important;
+    font-size: 16px !important;
+  }
+  
+  .search-icon {
+    width: 1rem !important;
+    height: 1rem !important;
+    left: 0.625rem !important;
+  }
 }
 </style>

@@ -1,0 +1,87 @@
+name: Deploy Remotely
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Deploy-Remotely:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js 23.x to Build
+        uses: actions/setup-node@v2
+        with:
+          node-version: "23.11.1"
+
+      - run: npm ci
+
+      - name: Build for GCP
+        run: npm run build
+
+      - name: Generate PM2 ecosystem.config.cjs File
+        run: |
+          mkdir -p .output/server
+          cat <<EOL > .output/server/ecosystem.config.cjs
+          module.exports = {
+            apps: [
+              {
+                name: "temi",
+                script: "index.mjs",
+                exec_mode: "cluster",
+                instances: "max",
+                env: {
+                  PORT: 3200,
+                  NITRO_PORT: 3200,
+                  NODE_ENV: "production",
+                  DATABASE_URL: "postgresql://neondb_owner:npg_XPlSyhg5F6aC@ep-weathered-darkness-a8by06qf-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require",
+                },
+              },
+            ],
+          };
+          EOL
+
+      - name: Setup and Verify SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GCP_VM_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keygen -lf ~/.ssh/deploy_key || echo "❌ Invalid SSH key!"
+          ssh-keyscan -H ${{ secrets.GCP_VM_IP }} >> ~/.ssh/known_hosts
+
+      - name: Rsync Build Folder to GCP Instance
+        run: |
+          rsync -az -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" .output/ ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }}:/home/tiny/temi/.output
+
+      - name: Check and Install PM2 if Not Installed
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.GCP_VM_IP }}
+          username: ${{ secrets.GCP_VM_USER }}
+          key: ${{ secrets.GCP_VM_SSH_KEY }}
+          port: "22"
+          script: |
+            export NVM_DIR="$HOME/.nvm"
+            source $NVM_DIR/nvm.sh
+            export PATH=$NVM_DIR/versions/node/v23.11.1/bin:$PATH
+            if ! command -v pm2 > /dev/null; then
+              echo "PM2 is not installed. Installing PM2..."
+              npm install -g pm2
+            else
+              echo "PM2 is already installed."
+            fi
+
+      - name: Restart PM2 Process
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.GCP_VM_IP }}
+          username: ${{ secrets.GCP_VM_USER }}
+          key: ${{ secrets.GCP_VM_SSH_KEY }}
+          port: "22"
+          script: |
+            export NVM_DIR="$HOME/.nvm"
+            source $NVM_DIR/nvm.sh
+            export PATH=$NVM_DIR/versions/node/v23.11.1/bin:$PATH
+            cd /home/tiny/temi/.output
+            pm2 restart temi || PORT=3200 pm2 start server/index.mjs --name "temi"

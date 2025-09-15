@@ -10,7 +10,11 @@ export default defineNuxtConfig({
   ],
   
   compatibilityDate: "2024-11-01",
-  devtools: { enabled: true },
+  devtools: { enabled: false },
+  ssr: true,
+  nitro: {
+    preset: 'vercel'
+  },
   css: [
     "~/assets/css/main.css",
     "notivue/notification.css",
@@ -26,6 +30,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     databaseUrl: process.env.DATABASE_URL,
     jwtSecret: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
+    public: {
+      apiBase: '/api'
+    }
   },
   app: {
     head: {

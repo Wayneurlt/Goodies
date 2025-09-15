@@ -1,0 +1,15 @@
+{
+  "buildCommand": "npm run prisma:generate && npm run build",
+  "outputDirectory": ".output",
+  "framework": "nuxtjs",
+  "installCommand": "npm install",
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "DATABASE_URL": "@database_url",
+    "JWT_SECRET": "@jwt_secret"
+  }
+}

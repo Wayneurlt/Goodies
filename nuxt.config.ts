@@ -13,7 +13,10 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   ssr: true,
   nitro: {
-    preset: 'vercel'
+    preset: 'vercel',
+    experimental: {
+      wasm: true
+    }
   },
   css: [
     "~/assets/css/main.css",
@@ -33,6 +36,9 @@ export default defineNuxtConfig({
     public: {
       apiBase: '/api'
     }
+  },
+  typescript: {
+    typeCheck: false
   },
   app: {
     head: {

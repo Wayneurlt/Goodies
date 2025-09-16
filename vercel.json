@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run prisma:generate && npm run build",
+  "buildCommand": "npm run vercel-build",
   "outputDirectory": ".output",
   "framework": "nuxtjs",
   "installCommand": "npm install",
@@ -11,5 +11,11 @@
   "env": {
     "DATABASE_URL": "@database_url",
     "JWT_SECRET": "@jwt_secret"
+  },
+  "build": {
+    "env": {
+      "DATABASE_URL": "@database_url",
+      "JWT_SECRET": "@jwt_secret"
+    }
   }
 }

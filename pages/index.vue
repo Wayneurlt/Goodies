@@ -323,6 +323,7 @@ const checkAuth = async () => {
       adminInfo.value = response.admin
     }
   } catch (error) {
+    console.error('Auth check failed:', error)
     isAdmin.value = false
     adminInfo.value = null
   }
@@ -348,16 +349,22 @@ const loadContacts = async (cursor = null) => {
     if (cursor) params.append('cursor', cursor)
     
     const response = await $fetch(`/api/contacts?${params}`)
-    if (cursor) {
-      contacts.value.push(...response.data)
-    } else {
-      contacts.value = response.data
+    if (response && response.data) {
+      if (cursor) {
+        contacts.value.push(...response.data)
+      } else {
+        contacts.value = response.data
+      }
+      
+      hasMore.value = response.nextCursor !== null
+      nextCursor.value = response.nextCursor
     }
-    
-    hasMore.value = response.nextCursor !== null
-    nextCursor.value = response.nextCursor
   } catch (error) {
     console.error('Error loading contacts:', error)
+    // Show user-friendly error message
+    if (error.statusCode === 500) {
+      console.error('Server error - check database connection')
+    }
   } finally {
     loading.value = false
   }
@@ -372,18 +379,28 @@ const loadMore = () => {
 const loadLocations = async () => {
   try {
     const response = await $fetch('/api/locations')
-    locations.value = response
+    if (response && Array.isArray(response)) {
+      locations.value = response
+    }
   } catch (error) {
     console.error('Error loading locations:', error)
+    if (error.statusCode === 500) {
+      console.error('Server error - check database connection')
+    }
   }
 }
 
 const loadStats = async () => {
   try {
     const response = await $fetch('/api/dashboard/stats')
-    stats.value = response
+    if (response) {
+      stats.value = response
+    }
   } catch (error) {
     console.error('Error loading stats:', error)
+    if (error.statusCode === 500) {
+      console.error('Server error - check database connection')
+    }
   }
 }
 
